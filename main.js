@@ -801,3 +801,152 @@ var eventuality = function (that) {
   };
   return that;
 };
+
+///////////
+//ARRAYS//
+//////////
+
+// Array Literals
+
+var empty = [];
+var numbers = [
+  'zero', 'one', 'two', 'three', 'four', 'five',
+  'six', 'seven', 'eight', 'nine'
+];
+
+var numbers_object = {
+  '0': 'zero', '1': 'one', '2': 'two', '3': 'three'
+};
+
+var misc = [
+  'string', 98.6, true, false, null, undefined, ['nested', 'array'],
+  {object: true}, NaN, Infinity
+];
+console.log('misc.length', misc.length);
+
+// Length
+
+var myArray = [];
+console.log('myArray.length', myArray.length);
+
+myArray[100000] = true;
+console.log('myArray.length', myArray.length, myArray);
+
+numbers.length = 3;
+console.log('numbers',numbers);
+
+numbers[numbers.length] = 'shi';
+console.log('numbers', numbers);
+
+numbers.push('go');
+console.log('numbers', numbers);
+
+// delete
+
+delete numbers[2];
+console.log('numbers', numbers);
+console.log(numbers[2]); //leaves a hole in the array
+// you should decremetn the names of each elements to the right
+
+numbers.splice(2, 1);
+console.log('numbers', numbers);
+
+//enumeration
+
+var i;
+for (i = 0; i < numbers.length; i += 1) {
+  document.writeln(numbers[i])
+}
+
+// Confusion
+
+// when properties are small sequential integers==>array
+// otherwise use an object
+
+var is_array = function (value) {
+  return value && typeof value === 'object' && value.constructor === Array;
+};
+// this function above doestn detect those constructed in a different window or first-name
+
+var is_array = function (value) {
+  return value &&
+        typeof value === 'object' &&
+        typeof value.length === 'number' &&
+        typeof value.splice === 'function' &&
+        !(value.propertyIsEnumerable('length'));
+};
+
+// methods
+
+Array.method('reduce', function(f, value){
+  var i;
+  for(i = 0; i < this.length; i += 1) {
+    value = f(this[i], value); //for each element of the array it calls the function with an element and the value
+  }
+  return value;
+});
+
+var data = [4, 8, 15, 16, 23, 42];
+
+var add = function (a, b) {
+  return a + b;
+}
+
+var mult = function (a, b) {
+  return a * b;
+};
+
+var sum = data.reduce(add, 0);
+console.log('sum',sum);
+
+var product = data.reduce(mult, 1);
+console.log('product', product);
+
+data.total =function(){
+  return this.reduce(add, 0);
+};
+
+total = data.total();
+
+console.log('total', total);
+
+// Dimensions
+
+Array.dim = function(dimension, initial) {
+  var a = [], i;
+  for (i = 0; i < dimension; i += 1) {
+    a[i] = initial;
+  }
+  return a;
+};
+
+var myArray = Array.dim(10, 0);
+console.log('array with initial values', myArray);
+
+// to build two dimensional array
+
+Array.matrix = function (m, n, initial) {
+  var a, i, j, mat = [];
+  for (i = 0; i < m; i += 1) {
+    a = [];
+    for (j = 0; j < n; j += 1) {
+      a[j] = initial;
+    }
+    mat[i] = a;
+  }
+  return mat;
+};
+
+var myMatrix = Array.matrix(4, 4, 0);
+console.log(myMatrix);
+
+Array.identity = function (n) {
+  var i, mat = Array.matrix (n, n, 0);
+  for (i = 0; i < n; i += 1) {
+    mat[i][i] = 1;
+  }
+  return mat;
+};
+
+myMatrix = Array.identity(4);
+document.writeln(myMatrix[3][3]);
